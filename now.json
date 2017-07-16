@@ -1,0 +1,8 @@
+{
+  "env": {
+    "NODE_ENV": "production",
+    "DB_ENV": "production",
+    "MONGO_URI_PRODUCTION": "@bestofjs_prod_mongo_uri"
+  },
+  "alias": "bestofjs-api-v0"
+}
