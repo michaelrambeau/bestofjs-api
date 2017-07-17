@@ -5,13 +5,16 @@ const debug = require('debug')('api')
 const feathers = require('feathers')
 const rest = require('feathers-rest')
 const hooks = require('feathers-hooks')
+const cors = require('cors')
 // const handler = require('feathers-errors/handler')
 const mongoose = require('mongoose')
 
+// "User Content" end points
 const linksService = require('./projects/user-content/links-service')
 const reviewsService = require('./projects/user-content/reviews-service')
+// The following end-point combines both `links` and `reviews` in the same response
+const userContentService = require('./projects/user-content')
 
-// Database connection
 mongoose.Promise = global.Promise
 
 function connect(uri) {
@@ -32,13 +35,14 @@ function main() {
 
   const app = feathers()
 
-  app.configure(rest()).configure(hooks())
+  app.configure(rest()).configure(hooks()).use(cors())
 
   app.use('/status', (req, res) => {
     res.send({ status: 'OK' })
   })
   app.use('/projects/:owner/:repo/links', linksService)
   app.use('/projects/:owner/:repo/reviews', reviewsService)
+  app.use('/projects/:owner/:repo/user-content', userContentService)
   // app.use(handler())
 
   const port = process.env.PORT || 3030

@@ -10,6 +10,7 @@
   "author": "Michael Rambeau",
   "license": "MIT",
   "dependencies": {
+    "cors": "^2.8.4",
     "debug": "^2.6.8",
     "dotenv": "^4.0.0",
     "feathers": "^2.1.4",
