@@ -7,7 +7,6 @@ const feathers = require('feathers')
 const rest = require('feathers-rest')
 const hooks = require('feathers-hooks')
 const cors = require('cors')
-// const handler = require('feathers-errors/handler')
 const mongoose = require('mongoose')
 
 // "User Content" end points
@@ -45,11 +44,15 @@ function main() {
     res.send({ status: 'OK', version })
   })
   app.use('/projects', projectsService)
+  app.use('/projects/:owner/:repo/user-content', userContentService)
   app.use('/projects/:owner/:repo', projectDetailsService)
   app.use('/projects/:owner/:repo/links', linksService)
   app.use('/projects/:owner/:repo/reviews', reviewsService)
-  app.use('/projects/:owner/:repo/user-content', userContentService)
-  // app.use(handler())
+  // eslint-disable-next-line no-unused-vars
+  app.use((err, req, res, next) => {
+    console.error('Error handling', err.stack) // eslint-disable-line no-console
+    res.status(500).json({ status: 'error', message: err.message })
+  })
 
   const port = process.env.PORT || 3030
 

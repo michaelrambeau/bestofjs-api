@@ -1,7 +1,7 @@
 const LinksService = require('./links-service')
 const ReviewsService = require('./reviews-service')
 
-class UserContentService {
+const userContentService = {
   find(params) {
     const requests = [LinksService.find(params), ReviewsService.find(params)]
     return Promise.all(requests).then(([links, reviews]) => ({
@@ -11,6 +11,4 @@ class UserContentService {
   }
 }
 
-const service = new UserContentService()
-
-module.exports = service
+module.exports = userContentService
