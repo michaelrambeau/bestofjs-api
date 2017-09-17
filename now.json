@@ -4,5 +4,5 @@
     "DB_ENV": "production",
     "MONGO_URI_PRODUCTION": "@bestofjs_prod_mongo_uri"
   },
-  "alias": "bestofjs-api-v0"
+  "alias": "bestofjs-api-v1"
 }

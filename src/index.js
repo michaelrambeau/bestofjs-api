@@ -1,6 +1,7 @@
 // Read secrets from `.env` file in local development mode
 require('dotenv').config({ silent: true })
 const debug = require('debug')('api')
+const packageJson = require('../package.json')
 
 const feathers = require('feathers')
 const rest = require('feathers-rest')
@@ -12,6 +13,8 @@ const mongoose = require('mongoose')
 // "User Content" end points
 const linksService = require('./projects/user-content/links-service')
 const reviewsService = require('./projects/user-content/reviews-service')
+const projectsService = require('./projects/projects-service')
+const projectDetailsService = require('./projects/details')
 // The following end-point combines both `links` and `reviews` in the same response
 const userContentService = require('./projects/user-content')
 
@@ -22,6 +25,7 @@ function connect(uri) {
   mongoose.connect(uri, { useMongoClient: true })
 }
 function main() {
+  const { version } = packageJson
   const dbEnv = process.env.DB_ENV || 'DEV'
   const key = `MONGO_URI_${dbEnv.toUpperCase()}`
   const uri = process.env[key]
@@ -38,8 +42,10 @@ function main() {
   app.configure(rest()).configure(hooks()).use(cors())
 
   app.use('/status', (req, res) => {
-    res.send({ status: 'OK' })
+    res.send({ status: 'OK', version })
   })
+  app.use('/projects', projectsService)
+  app.use('/projects/:owner/:repo', projectDetailsService)
   app.use('/projects/:owner/:repo/links', linksService)
   app.use('/projects/:owner/:repo/reviews', reviewsService)
   app.use('/projects/:owner/:repo/user-content', userContentService)

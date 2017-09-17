@@ -10,6 +10,30 @@ Hosted on https://zeit.co/now
 
 * `projects/:owner/:repo/links`: the list of links related to a given GitHub project
 * `projects/:owner/:repo/reviews`: the list of reviews related to a given GitHub project
+* `projects/:owner/:repo`: retrieve information about a given repository
+
+### Sample
+
+```json
+{
+  "name": "Lozad",
+  "github": {
+    "name": "lozad.js",
+    "full_name": "ApoorvSaxena/lozad.js",
+    "description": "🔥  Highly performant, light ~0.5kb and configurable lazy loader in pure JS with no dependencies for images, iframes and more",
+    "homepage": "https://apoorv.pro/lozad.js/demo/",
+    "stargazers_count": 1876,
+    "pushed_at": "2017-09-15T18:58:18.000Z",
+    "owner_id": 307583,
+    "branch": "master",
+    "topics": ["performance", "javascript", "lazy-loading", "lazyload", "lozad"]
+  },
+  "tags": ["load"],
+  "npm": { "name": "lozad", "version": "1.0.2", "dependencies": [] },
+  "icon": "",
+  "daily-trends": [68, 125, 202, 230, 361, 331, 85, 22, 66]
+}
+```
 
 ## Development
 

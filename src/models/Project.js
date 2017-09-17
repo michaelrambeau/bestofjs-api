@@ -5,12 +5,21 @@ const fields = {
   url: String,
   description: String,
   repository: String,
-  // tags: [
-  //   {
-  //     type: mongoose.Schema.ObjectId,
-  //     ref: 'Tag'
-  //   }
-  // ],
+  tags: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Tag'
+    }
+  ],
+  snapshots: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Snapshot'
+    }
+  ],
+  icon: {
+    url: String
+  },
   createdAt: {
     type: Date
   },
@@ -27,7 +36,8 @@ const fields = {
     homepage: String,
     stargazers_count: Number,
     pushed_at: Date
-  }
+  },
+  trends: Object
 }
 
 const schema = new mongoose.Schema(fields, {
