@@ -40,9 +40,9 @@ function main() {
 
   app.configure(rest()).configure(hooks()).use(cors())
 
-  app.use('/status', (req, res) => {
-    res.send({ status: 'OK', version })
-  })
+  const sendStatus = (req, res) => res.send({ status: 'OK', version })
+
+  app.use('/', sendStatus)
   app.use('/projects', projectsService)
   app.use('/projects/:owner/:repo/user-content', userContentService)
   app.use('/projects/:owner/:repo', projectDetailsService)
