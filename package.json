@@ -29,5 +29,8 @@
     "eslint-plugin-prettier": "^2.1.2",
     "eslint-plugin-promise": "^3.5.0",
     "prettier": "^1.5.3"
+  },
+  "engines": {
+    "node": ">=8.1.2"
   }
 }

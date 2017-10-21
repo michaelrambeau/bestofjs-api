@@ -41,13 +41,11 @@ function main() {
   app.configure(rest()).configure(hooks()).use(cors())
 
   const sendStatus = (req, res) => res.send({ status: 'OK', version })
-
-  app.use('/', sendStatus)
-  app.use('/projects', projectsService)
   app.use('/projects/:owner/:repo/user-content', userContentService)
   app.use('/projects/:owner/:repo', projectDetailsService)
   app.use('/projects/:owner/:repo/links', linksService)
   app.use('/projects/:owner/:repo/reviews', reviewsService)
+  app.use('/', sendStatus)
   // eslint-disable-next-line no-unused-vars
   app.use((err, req, res, next) => {
     console.error('Error handling', err.stack) // eslint-disable-line no-console

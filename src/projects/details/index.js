@@ -10,13 +10,14 @@ async function findProject(params) {
   const result = await getProject(full_name)
   const { data } = result
   const project = data[0]
+  if (!project) throw new Error(`Project not found '${full_name}'`)
   return Object.assign({}, convertProject(project), {
     'daily-trends': project.trends.daily
   })
 }
 
 function convertProject(project) {
-  debug('Convert', project.name)
+  debug('Convert', project)
   const tags = project.tags.map(convertTag)
   const { github, npm } = project
   return {
