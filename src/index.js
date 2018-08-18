@@ -33,7 +33,7 @@ function main() {
   try {
     connect(uri)
   } catch (e) {
-    throw new Error('Unable to connect to the DB', uri)
+    throw new Error('Unable to connect to the DB', `${uri.slice(0, 12)}...`)
   }
 
   const app = feathers()

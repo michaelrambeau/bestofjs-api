@@ -19,13 +19,15 @@ async function findProject(params) {
 function convertProject(project) {
   debug('Convert', project)
   const tags = project.tags.map(convertTag)
-  const { github, npm } = project
+  const { github, npm, bundle, packageSize } = project
   return {
     name: project.name,
     github,
     tags,
     npm,
-    icon: project.icon ? project.icon.url : null
+    icon: project.icon ? project.icon.url : null,
+    bundle,
+    packageSize
   }
 }
 
@@ -33,7 +35,16 @@ const getProject = full_name => {
   const options = {
     query: {
       'github.full_name': full_name,
-      $select: ['name', 'icon.url', 'github', 'tags', 'npm', 'trends'],
+      $select: [
+        'name',
+        'icon.url',
+        'github',
+        'tags',
+        'npm',
+        'trends',
+        'bundle',
+        'packageSize'
+      ],
       $populate: ['tags']
     }
   }

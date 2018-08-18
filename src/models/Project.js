@@ -37,7 +37,19 @@ const fields = {
     stargazers_count: Number,
     pushed_at: Date
   },
-  trends: Object
+  trends: Object,
+  bundle: {
+    name: String,
+    dependencyCount: Number,
+    gzip: Number,
+    size: Number,
+    version: String
+  },
+  packageSize: {
+    publishSize: Number,
+    installSize: Number,
+    version: String
+  }
 }
 
 const schema = new mongoose.Schema(fields, {

@@ -1,6 +1,6 @@
-# BestOfJS public API (Work in Progress)
+# Best of JavaScript public API
 
-Public API used by https://bestof.js.org/ web application, made with [FeathersJS](https://feathersjs.com/)
+Public API used by https://bestofjs.org/ web application, a node.js server made with [FeathersJS](https://feathersjs.com/)
 
 Used to serve the user-generated content: the links and the reviews posted by the users.
 
@@ -8,9 +8,8 @@ Hosted on https://zeit.co/now
 
 ## End points
 
-* `projects/:owner/:repo/links`: the list of links related to a given GitHub project
-* `projects/:owner/:repo/reviews`: the list of reviews related to a given GitHub project
-* `projects/:owner/:repo`: retrieve information about a given repository
+- `projects/:owner/:repo`: retrieve information about a given repository
+- `projects/:owner/:repo/user-link`: the list of reviews and link related to a given GitHub project
 
 ### Sample
 
@@ -63,7 +62,7 @@ To see all debug messages, including those from FeathersJS
 DEBUG=* npm start
 ```
 
-Check the result for Redux project, for example: `http://localhost:3030/projects/reactjs/redux/links`
+Check the result for Redux project, for example: `http://localhost:3030/projects/reactjs/redux`
 
 ## Deploy
 
