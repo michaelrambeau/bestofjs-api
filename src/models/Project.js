@@ -37,7 +37,14 @@ const fields = {
     stargazers_count: Number,
     pushed_at: Date
   },
-  trends: Object,
+  npm: {
+    name: String,
+    version: String,
+    dependencies: Array
+  },
+  trends: {
+    daily: Array
+  },
   bundle: {
     name: String,
     dependencyCount: Number,
@@ -63,6 +70,8 @@ schema.methods.toString = function() {
 // schema.virtual('key').get(function () {
 //   return this.name.toLowerCase().replace(/[^a-z._\-0-9]+/g, '-')
 // })
+
+// schema.index({ 'github.full_name': 1, type: -1 }); // schema level
 
 const model = mongoose.model('Project', schema)
 module.exports = model

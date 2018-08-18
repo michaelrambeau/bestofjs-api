@@ -1,54 +1,56 @@
 const debug = require('debug')('api')
-const ProjectsService = require('../projects-service')
+const Model = require('../../models/Project')
+const flow = require('lodash.flow')
 
 const convertTag = tag => tag.code
 
-async function findProject(params) {
+async function findProject(params, { includeTags } = {}) {
   const { owner, repo } = params
   const full_name = `${owner}/${repo}`
-  debug('Search for', full_name)
-  const result = await getProject(full_name)
-  const { data } = result
-  const project = data[0]
+  const query = { 'github.full_name': full_name }
+  const fields = [
+    'name',
+    'icon.url',
+    'github',
+    'tags',
+    'npm',
+    'trends',
+    'bundle',
+    'packageSize'
+  ]
+  debug('Search for', query)
+  const project = await Model.findOne(query, fields)
+  debug('Found', project)
   if (!project) throw new Error(`Project not found '${full_name}'`)
-  return Object.assign({}, convertProject(project), {
-    'daily-trends': project.trends.daily
-  })
+  return convertProject(project)
+}
+
+const addTags = input => output => {
+  const { tags } = input
+  return tags
+    ? Object.assign({}, output, { tags: tags.map(convertTag) })
+    : output
+}
+
+const addTrends = input => output => {
+  const { trends } = input
+  return trends
+    ? Object.assign({}, output, { 'daily-trends': trends.daily })
+    : output
 }
 
 function convertProject(project) {
-  debug('Convert', project)
-  const tags = project.tags.map(convertTag)
-  const { github, npm, bundle, packageSize } = project
-  return {
-    name: project.name,
+  const { github, npm, bundle, packageSize, name, icon } = project
+  debug('Convert', name)
+  const output = {
+    name,
     github,
-    tags,
     npm,
-    icon: project.icon ? project.icon.url : null,
+    icon: icon ? icon.url : null,
     bundle,
     packageSize
   }
-}
-
-const getProject = full_name => {
-  const options = {
-    query: {
-      'github.full_name': full_name,
-      $select: [
-        'name',
-        'icon.url',
-        'github',
-        'tags',
-        'npm',
-        'trends',
-        'bundle',
-        'packageSize'
-      ],
-      $populate: ['tags']
-    }
-  }
-  return ProjectsService.find(options)
+  return flow([addTags(project), addTrends(project)])(output)
 }
 
 class ProjectDetails {
