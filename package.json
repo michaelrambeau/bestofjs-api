@@ -20,6 +20,7 @@
     "feathers-rest": "^1.8.0",
     "lodash.flow": "^3.5.0",
     "lodash.get": "^4.4.2",
+    "lru-cache-node": "^1.0.1",
     "mongoose": "^4.11.3",
     "pretty-bytes": "^5.1.0"
   },

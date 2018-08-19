@@ -1,9 +1,14 @@
 const Model = require('../../models/Link')
 const createUserContentService = require('./create-service')
+const debug = require('debug')('api')
 
-const linksService = createUserContentService({
-  Model,
-  projectField: 'projects'
-})
+const createLinksService = ({ lookupService }) => {
+  debug('Create the service', Model.modelName)
+  return createUserContentService({
+    lookupService,
+    Model,
+    projectField: 'projects'
+  })
+}
 
-module.exports = linksService
+module.exports = createLinksService
