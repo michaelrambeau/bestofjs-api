@@ -1,10 +1,12 @@
-const debug = require('debug')('api')
-const Model = require('../../models/Project')
 const flow = require('lodash.flow')
+const prettyBytes = require('pretty-bytes')
+const debug = require('debug')('api')
+
+const Model = require('../../models/Project')
 
 const convertTag = tag => tag.code
 
-async function findProject(params, { includeTags } = {}) {
+async function findProject(params) {
   const { owner, repo } = params
   const full_name = `${owner}/${repo}`
   const query = { 'github.full_name': full_name }
@@ -20,7 +22,6 @@ async function findProject(params, { includeTags } = {}) {
   ]
   debug('Search for', query)
   const project = await Model.findOne(query, fields)
-  debug('Found', project)
   if (!project) throw new Error(`Project not found '${full_name}'`)
   return convertProject(project)
 }
@@ -41,7 +42,6 @@ const addTrends = input => output => {
 
 function convertProject(project) {
   const { github, npm, bundle, packageSize, name, icon } = project
-  debug('Convert', name)
   const output = {
     name,
     github,
@@ -50,7 +50,9 @@ function convertProject(project) {
     bundle,
     packageSize
   }
-  return flow([addTags(project), addTrends(project)])(output)
+  const response = flow([addTags(project), addTrends(project)])(output)
+  debug('Sending', name, prettyBytes(JSON.stringify(response).length))
+  return response
 }
 
 class ProjectDetails {

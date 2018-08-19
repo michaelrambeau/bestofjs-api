@@ -5,17 +5,15 @@ const debug = require('debug')('api')
 function createUserContentService({ Model, projectField }) {
   class UserContentService extends MongooseService {
     find(params) {
-      debug('`LinksService` service find request', params)
       const { owner, repo } = params
       const full_name = `${owner}/${repo}`
-      debug('Search for', full_name)
+      debug('Search for', full_name, Model.modelName)
       return Project.findOne({
         'github.full_name': full_name
       })
         .select({ _id: 1, name: 1 })
         .then(project => {
           if (!project) throw new Error(`No project found ${full_name}`)
-          debug('Project found', project)
           const { _id } = project
           const query = { [projectField]: _id }
           params.query = query

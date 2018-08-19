@@ -9,11 +9,13 @@ const hooks = require('feathers-hooks')
 const cors = require('cors')
 const mongoose = require('mongoose')
 
-// "User Content" end points
+// End-points to fetch project details (READONLY)
+// const projectsService = require('./projects/projects-service') // for admin only
+const projectDetailsService = require('./projects/details')
+
+// End-points to fetch content created by the users (reviews and links)
 const linksService = require('./projects/user-content/links-service')
 const reviewsService = require('./projects/user-content/reviews-service')
-const projectsService = require('./projects/projects-service')
-const projectDetailsService = require('./projects/details')
 // The following end-point combines both `links` and `reviews` in the same response
 const userContentService = require('./projects/user-content')
 
@@ -24,7 +26,7 @@ function connect(uri) {
   mongoose.connect(uri, { useMongoClient: true })
 }
 function main() {
-  const { version } = packageJson
+  const { version, name, description } = packageJson
   const dbEnv = process.env.DB_ENV || 'DEV'
   const key = `MONGO_URI_${dbEnv.toUpperCase()}`
   const uri = process.env[key]
@@ -40,15 +42,16 @@ function main() {
 
   app.configure(rest()).configure(hooks()).use(cors())
 
-  const sendStatus = (req, res) => res.send({ status: 'OK', version })
+  const sendStatus = (req, res) =>
+    res.send({ status: 'OK', name, version, description })
   app.use('/projects/:owner/:repo/user-content', userContentService)
-  app.use('/projects/:owner/:repo', projectDetailsService)
   app.use('/projects/:owner/:repo/links', linksService)
   app.use('/projects/:owner/:repo/reviews', reviewsService)
+  app.use('/projects/:owner/:repo', projectDetailsService)
   app.use('/', sendStatus)
   // eslint-disable-next-line no-unused-vars
   app.use((err, req, res, next) => {
-    console.error('Error handling', err.stack) // eslint-disable-line no-console
+    console.error('An error occurred!', err.stack) // eslint-disable-line no-console
     res.status(500).json({ status: 'error', message: err.message })
   })
 
