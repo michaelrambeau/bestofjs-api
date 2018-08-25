@@ -1,8 +1,7 @@
-const Model = require('../../models/Link')
 const createUserContentService = require('./create-service')
 const debug = require('debug')('api')
 
-const createLinksService = ({ lookupService }) => {
+const createLinksService = ({ lookupService, Model }) => {
   debug('Create the service', Model.modelName)
   return createUserContentService({
     lookupService,

@@ -2,11 +2,9 @@ const flow = require('lodash.flow')
 const prettyBytes = require('pretty-bytes')
 const debug = require('debug')('api')
 
-const Model = require('../../models/Project')
-
 const convertTag = tag => tag.code
 
-async function findProject({ route }) {
+async function findProject({ Project, route }) {
   const { owner, repo } = route
   const full_name = `${owner}/${repo}`
   const query = { 'github.full_name': full_name }
@@ -21,7 +19,7 @@ async function findProject({ route }) {
     'packageSize'
   ]
   debug('Search for', query)
-  const project = await Model.findOne(query, fields)
+  const project = await Project.findOne(query, fields)
   if (!project) throw new Error(`Project not found '${full_name}'`)
   return convertProject(project)
 }
@@ -55,10 +53,13 @@ function convertProject(project) {
   return response
 }
 
-class ProjectDetails {
-  find(params) {
-    return findProject(params)
+const createService = ({ Project }) => {
+  class ProjectDetails {
+    find(params) {
+      return findProject({ ...params, Project })
+    }
   }
+  return new ProjectDetails({ Project })
 }
 
-module.exports = new ProjectDetails()
+module.exports = createService
