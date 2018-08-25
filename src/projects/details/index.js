@@ -6,8 +6,8 @@ const Model = require('../../models/Project')
 
 const convertTag = tag => tag.code
 
-async function findProject(params) {
-  const { owner, repo } = params
+async function findProject({ route }) {
+  const { owner, repo } = route
   const full_name = `${owner}/${repo}`
   const query = { 'github.full_name': full_name }
   const fields = [

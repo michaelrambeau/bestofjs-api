@@ -1,6 +1,6 @@
 {
   "name": "bestofjs-api",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Best of JavaScript public API",
   "main": "src/index.js",
   "scripts": {
@@ -10,14 +10,11 @@
   "author": "Michael Rambeau",
   "license": "MIT",
   "dependencies": {
+    "@feathersjs/express": "^1.2.3",
+    "@feathersjs/feathers": "^3.1.7",
     "cors": "^2.8.4",
     "debug": "^2.6.8",
     "dotenv": "^4.0.0",
-    "feathers": "^2.1.4",
-    "feathers-errors": "^2.8.2",
-    "feathers-hooks": "^2.0.2",
-    "feathers-mongoose": "^5.1.1",
-    "feathers-rest": "^1.8.0",
     "lodash.flow": "^3.5.0",
     "lodash.get": "^4.4.2",
     "lru-cache-node": "^1.0.1",
@@ -34,6 +31,6 @@
     "prettier": "^1.5.3"
   },
   "engines": {
-    "node": ">=8.1.2"
+    "node": ">=10.5.0"
   }
 }

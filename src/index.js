@@ -1,20 +1,18 @@
 // Read secrets from `.env` file in local development mode
 require('dotenv').config({ silent: true })
 const debug = require('debug')('api')
-const packageJson = require('../package.json')
-
-const feathers = require('feathers')
-const rest = require('feathers-rest')
-const hooks = require('feathers-hooks')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const Cache = require('lru-cache-node')
+const feathers = require('@feathersjs/feathers')
+const express = require('@feathersjs/express')
+
+const packageJson = require('../package.json')
 
 // Models
 const Project = require('./models/Project')
 
 // End-points to fetch project details (READONLY)
-// const projectsService = require('./projects/projects-service') // for admin only
 const projectDetailsService = require('./projects/details')
 
 // End-points to fetch content created by the users (reviews and links)
@@ -46,12 +44,12 @@ function main() {
     throw new Error('Unable to connect to the DB', `${uri.slice(0, 12)}...`)
   }
 
-  const app = feathers()
-
-  app.configure(rest()).configure(hooks()).use(cors())
+  const app = express(feathers())
+  app.configure(express.rest())
+  app.use(cors())
 
   const sendStatus = (req, res) =>
-    res.send({ status: 'OK', name, version, description })
+    res.send({ status: 'OK!', name, version, description })
 
   const checkCache = (req, res) => {
     const keyValues = cache.toArray()
