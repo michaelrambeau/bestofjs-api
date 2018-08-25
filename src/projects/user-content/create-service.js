@@ -9,9 +9,12 @@ function createUserContentService({ Model, projectField, lookupService }) {
       const _id = await lookupService.getIdByFullname({ full_name })
       const searchQuery = { [projectField]: _id }
       // TODO: we lose the pagination feature by calling `Model.find()` instead of `super.find(params)`
-      return Model.find(searchQuery)
-        .populate(projectField, 'github.full_name')
-        .exec()
+      const doc = await Model.find(searchQuery)
+      const populated = Model.populate(doc, {
+        path: projectField,
+        select: 'github.full_name'
+      })
+      return populated
     }
     get(id, params) {
       return super.get(id, params)

@@ -12,7 +12,7 @@ async function findProject({ Project, route }) {
     'name',
     'icon.url',
     'github',
-    'tags',
+    // 'tags',
     'npm',
     'trends',
     'bundle',

@@ -5,9 +5,7 @@ const mongoose = require('mongoose')
 mongoose.Promise = global.Promise
 
 // Models
-const Project = require('./models/Project')
-const Link = require('./models/Link')
-const Review = require('./models/Review')
+const { Project, Link, Review } = require('./models')
 
 const createApp = require('./app')
 
@@ -28,7 +26,9 @@ function main() {
     throw new Error('Unable to connect to the DB', `${uri.slice(0, 12)}...`)
   }
   const port = process.env.PORT || 3030
-  createApp({ Project, Link, Review, port })
+  const app = createApp({ Project, Link, Review })
+  console.log('> API started, listening on port', port) // eslint-disable-line no-console
+  app.listen(port)
 }
 
 main()

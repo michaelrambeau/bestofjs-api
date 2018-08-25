@@ -15,9 +15,11 @@ const createLookupService = ({ Model, cache }) => {
 
 const fetchIdFromDB = async ({ Model, full_name }) => {
   debug('[Not in cache] search for', full_name, Model.modelName)
-  const project = await Model.findOne({
+  const query = {
     'github.full_name': full_name
-  }).select({ _id: 1, name: 1 })
+  }
+  const fields = { _id: 1, name: 1 }
+  const project = await Model.findOne(query, fields)
   if (!project) throw new Error(`No project found ${full_name}`)
   const { _id } = project
   return _id

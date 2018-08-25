@@ -16,7 +16,7 @@ function setupRoutes({ app, cache, Project, Link, Review }) {
   const lookupService = createLookupService({ cache, Model: Project })
   const projectDetailsService = createProjectDetailsService({ Project })
   const sendStatus = (req, res) =>
-    res.send({ status: 'OK!', name, version, description })
+    res.send({ status: 'OK', name, version, description })
 
   const checkCache = (req, res) => {
     const keyValues = cache.toArray()

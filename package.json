@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "deploy": "now --public"
+    "deploy": "now --public",
+    "test": "jest --watch"
   },
   "author": "Michael Rambeau",
   "license": "MIT",
@@ -28,7 +29,9 @@
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-prettier": "^2.1.2",
     "eslint-plugin-promise": "^3.5.0",
-    "prettier": "^1.5.3"
+    "jest": "^23.5.0",
+    "prettier": "^1.5.3",
+    "supertest": "^3.1.0"
   },
   "engines": {
     "node": ">=10.5.0"
