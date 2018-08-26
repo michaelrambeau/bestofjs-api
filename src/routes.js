@@ -10,6 +10,7 @@ const createReviewsService = require('./projects/user-content/reviews-service')
 // The following end-point combines both `links` and `reviews` in the same response
 const createUserContentService = require('./projects/user-content')
 const createLookupService = require('./projects/lookup')
+const caching = require('./caching')
 
 function setupRoutes({ app, cache, Project, Link, Review }) {
   const { version, name, description } = packageJson
@@ -28,10 +29,12 @@ function setupRoutes({ app, cache, Project, Link, Review }) {
   const LinksService = createLinksService({ lookupService, Model: Link })
   const ReviewsService = createReviewsService({ lookupService, Model: Review })
 
-  app.use(
-    '/projects/:owner/:repo/user-content',
-    createUserContentService({ LinksService, ReviewsService })
-  )
+  app
+    .use(caching)
+    .use(
+      '/projects/:owner/:repo/user-content',
+      createUserContentService({ LinksService, ReviewsService })
+    )
   app.use('/projects/:owner/:repo/links', LinksService)
   app.use('/projects/:owner/:repo/reviews', ReviewsService)
   app.use('/projects/:owner/:repo', projectDetailsService)

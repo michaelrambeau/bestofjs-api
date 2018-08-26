@@ -6,6 +6,8 @@ test('It should return the details about `Redux` project', async () => {
   const response = await request(app)
     .get('/projects/reduxjs/redux')
     .expect('Content-Type', /json/)
+    .expect('Cache-Control', /public, max-age=\d+/)
+    .expect('ETag', /.*/)
     .expect(200)
   const { body } = response
   const { name, github, npm, bundle, packageSize } = body

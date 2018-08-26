@@ -8,6 +8,5 @@ test('It should return the status OK', async () => {
     .expect('Content-Type', /json/)
     .expect(200)
   const { body } = response
-  const { links, reviews } = body
   expect(body).toHaveProperty('status', 'OK')
 })
