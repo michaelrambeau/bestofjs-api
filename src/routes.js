@@ -29,16 +29,14 @@ function setupRoutes({ app, cache, Project, Link, Review }) {
   const LinksService = createLinksService({ lookupService, Model: Link })
   const ReviewsService = createReviewsService({ lookupService, Model: Review })
 
-  app
-    .use(caching)
-    .use(
-      '/projects/:owner/:repo/user-content',
-      createUserContentService({ LinksService, ReviewsService })
-    )
+  app.use(
+    '/projects/:owner/:repo/user-content',
+    createUserContentService({ LinksService, ReviewsService })
+  )
   app.use('/projects/:owner/:repo/links', LinksService)
   app.use('/projects/:owner/:repo/reviews', ReviewsService)
-  app.use('/projects/:owner/:repo', projectDetailsService)
-  app.use('/cache', checkCache)
+  app.use('/projects/:owner/:repo', caching, projectDetailsService)
+  app.use('/cache2', checkCache)
   app.use('/', sendStatus)
   // eslint-disable-next-line no-unused-vars
   app.use((err, req, res, next) => {
