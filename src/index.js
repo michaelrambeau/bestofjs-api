@@ -11,7 +11,10 @@ const createApp = require('./app')
 
 function connect(uri) {
   debug('Connecting', `${uri.slice(0, 12)}...`)
-  mongoose.connect(uri, { useMongoClient: true })
+  mongoose.connect(
+    uri,
+    { useMongoClient: true }
+  )
 }
 
 function main() {

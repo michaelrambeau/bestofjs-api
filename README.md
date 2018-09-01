@@ -1,38 +1,16 @@
 # Best of JavaScript public API
 
-Public API used by https://bestofjs.org/ web application, a node.js server made with [FeathersJS](https://feathersjs.com/)
+Public API consumed by https://bestofjs.org/ web application.
 
-Used to serve the user-generated content: the links and the reviews posted by the users.
+Stack:
 
-Hosted on https://zeit.co/now
+- Node.js server made with [FeathersJS](https://feathersjs.com/)
+- Hosted on https://zeit.co/now
 
 ## End points
 
-- `projects/:owner/:repo`: retrieve information about a given repository
-- `projects/:owner/:repo/user-link`: the list of reviews and link related to a given GitHub project
-
-### Sample
-
-```json
-{
-  "name": "Lozad",
-  "github": {
-    "name": "lozad.js",
-    "full_name": "ApoorvSaxena/lozad.js",
-    "description": "🔥  Highly performant, light ~0.5kb and configurable lazy loader in pure JS with no dependencies for images, iframes and more",
-    "homepage": "https://apoorv.pro/lozad.js/demo/",
-    "stargazers_count": 1876,
-    "pushed_at": "2017-09-15T18:58:18.000Z",
-    "owner_id": 307583,
-    "branch": "master",
-    "topics": ["performance", "javascript", "lazy-loading", "lazyload", "lozad"]
-  },
-  "tags": ["load"],
-  "npm": { "name": "lozad", "version": "1.0.2", "dependencies": [] },
-  "icon": "",
-  "daily-trends": [68, 125, 202, 230, 361, 331, 85, 22, 66]
-}
-```
+- `projects/:owner/:repo`: retrieve details about a given repository: daily trends, packages size, bundle size...
+- `projects/:owner/:repo/user-link`: the list of reviews and links, related to a given GitHub project
 
 ## Development
 
@@ -72,4 +50,10 @@ To deploy on `now.sh` run:
 
 ```
 npm run deploy
+```
+
+## Testing
+
+```
+npm test
 ```

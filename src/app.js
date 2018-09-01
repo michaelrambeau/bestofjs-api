@@ -9,8 +9,11 @@ function createApp({ Project, Link, Review }) {
   const app = express(feathers())
   app.configure(express.rest())
   app.use(cors())
-  const cache = new Cache()
-  setupRoutes({ app, Project, Link, Review, cache })
+  const appCache = {
+    projectDetails: new Cache(),
+    projectIds: new Cache()
+  }
+  setupRoutes({ app, Project, Link, Review, appCache })
   return app
 }
 

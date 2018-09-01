@@ -14,7 +14,6 @@ const createLookupService = ({ Model, cache }) => {
 }
 
 const fetchIdFromDB = async ({ Model, full_name }) => {
-  debug('[Not in cache] search for', full_name, Model.modelName)
   const query = {
     'github.full_name': full_name
   }

@@ -2,11 +2,11 @@ const flow = require('lodash.flow')
 const prettyBytes = require('pretty-bytes')
 const debug = require('debug')('api')
 
+const { fetchIfNeeded } = require('../../helpers/next-update')
+
 const convertTag = tag => tag.code
 
-async function findProject({ Project, route }) {
-  const { owner, repo } = route
-  const full_name = `${owner}/${repo}`
+async function findProject({ Project, full_name }) {
   const query = { 'github.full_name': full_name }
   const fields = [
     'name',
@@ -18,7 +18,6 @@ async function findProject({ Project, route }) {
     'bundle',
     'packageSize'
   ]
-  debug('Search for', query)
   const project = await Project.findOne(query, fields)
   if (!project) throw new Error(`Project not found '${full_name}'`)
   return convertProject(project)
@@ -49,14 +48,29 @@ function convertProject(project) {
     packageSize
   }
   const response = flow([addTags(project), addTrends(project)])(output)
-  debug('Sending', name, prettyBytes(JSON.stringify(response).length))
   return response
 }
 
-const createService = ({ Project }) => {
+const createService = ({ Project, cache, dailyUpdateUTCHour }) => {
   class ProjectDetails {
-    find(params) {
-      return findProject({ ...params, Project })
+    async find({ route /*, params */ }) {
+      const { owner, repo } = route
+      const full_name = `${owner}/${repo}`
+      const { data, meta } = await fetchIfNeeded({
+        fetchFn: () => findProject({ full_name, Project }),
+        key: full_name,
+        cache,
+        currentDate: new Date(),
+        dailyUpdateUTCHour
+      })
+      const { fromCache } = meta
+      debug(
+        'Sending',
+        full_name,
+        prettyBytes(JSON.stringify(data).length),
+        fromCache ? 'from the cache' : '[NOT IN CACHE]'
+      )
+      return data
     }
   }
   return new ProjectDetails({ Project })

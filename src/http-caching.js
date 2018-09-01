@@ -1,9 +1,8 @@
 const debug = require('debug')('caching')
 const { getNextUpdateTimeDifference } = require('./helpers/next-update')
 
-const caching = (req, res, done) => {
+const makeHttpCaching = ({ dailyUpdateUTCHour }) => (req, res, done) => {
   const now = new Date()
-  const dailyUpdateUTCHour = 21
   const nextUpdateTimeDifference = getNextUpdateTimeDifference(
     now,
     dailyUpdateUTCHour
@@ -13,4 +12,4 @@ const caching = (req, res, done) => {
   done()
 }
 
-module.exports = caching
+module.exports = makeHttpCaching
