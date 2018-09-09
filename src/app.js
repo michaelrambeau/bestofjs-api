@@ -1,7 +1,7 @@
 const cors = require('cors')
 const feathers = require('@feathersjs/feathers')
 const express = require('@feathersjs/express')
-const Cache = require('lru-cache-node')
+const Cache = require('lru-cache')
 
 const setupRoutes = require('./routes')
 

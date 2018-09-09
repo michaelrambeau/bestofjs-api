@@ -31,9 +31,8 @@ function setupRoutes({ app, appCache, Project, Link, Review }) {
 
   const checkCache = (req, res) => {
     const showCacheKeys = cache => {
-      const keyValues = cache.toArray()
-      const count = keyValues.length
-      const keys = keyValues.map(item => item.key).slice(0, 100)
+      const keys = cache.keys().slice(0, 10)
+      const count = keys.length
       return { count, keys }
     }
     res.send({

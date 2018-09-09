@@ -1,4 +1,4 @@
-const Cache = require('lru-cache-node')
+const Cache = require('lru-cache')
 
 const {
   getNextUpdateDate,
