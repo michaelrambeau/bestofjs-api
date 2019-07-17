@@ -3,7 +3,9 @@ const mongoose = require('mongoose')
 const fields = {
   name: String,
   url: String,
+  override_url: Boolean,
   description: String,
+  override_description: Boolean,
   repository: String,
   tags: [
     {
@@ -11,15 +13,6 @@ const fields = {
       ref: 'Tag'
     }
   ],
-  snapshots: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Snapshot'
-    }
-  ],
-  icon: {
-    url: String
-  },
   createdAt: {
     type: Date
   },
@@ -35,36 +28,75 @@ const fields = {
     description: String,
     homepage: String,
     stargazers_count: Number,
-    pushed_at: Date
+    pushed_at: Date,
+    branch: String,
+    packageJson: Boolean,
+    owner_id: Number,
+    topics: Array,
+    commit_count: Number,
+    contributor_count: Number,
+    created_at: Date,
+    archived: Boolean,
+    updatedAt: Date
   },
   npm: {
     name: String,
     version: String,
-    dependencies: Array
-  },
-  trends: {
-    daily: Array
+    dependencies: [String]
   },
   bundle: {
     name: String,
     dependencyCount: Number,
     gzip: Number,
     size: Number,
-    version: String
+    version: String,
+    errorMessage: String
   },
   packageSize: {
-    publishSize: Number,
+    name: String,
     installSize: Number,
-    version: String
-  }
+    publishSize: Number,
+    version: String,
+    errorMessage: String
+  },
+  packagequality: {
+    quality: Number
+  },
+  npms: {
+    score: {
+      detail: {
+        maintenance: Number,
+        popularity: Number,
+        quality: Number
+      },
+      final: Number
+    }
+  },
+  icon: {
+    url: String
+  },
+  colors: {
+    vibrant: String
+  },
+  trends: Object,
+  twitter: String
 }
 
 const schema = new mongoose.Schema(fields, {
-  collection: 'project'
+  collection: 'projects'
 })
 
 schema.methods.toString = function() {
   return 'Project ' + this.name + ' ' + this._id
+}
+
+// For some projects, don't use the GitHub description that is not really relevant
+schema.methods.getDescription = function() {
+  const { description: githubDescription } = this.github
+
+  const overrideGithubDescription =
+    this.override_description || !githubDescription
+  return overrideGithubDescription ? this.description : githubDescription
 }
 
 // schema.virtual('key').get(function () {

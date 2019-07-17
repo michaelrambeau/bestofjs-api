@@ -5,7 +5,7 @@ const Cache = require('lru-cache')
 
 const setupRoutes = require('./routes')
 
-function createApp({ Project, Link, Review }) {
+function createApp(models) {
   const app = express(feathers())
   app.configure(express.rest())
   app.use(cors())
@@ -13,7 +13,7 @@ function createApp({ Project, Link, Review }) {
     projectDetails: new Cache(),
     projectIds: new Cache()
   }
-  setupRoutes({ app, Project, Link, Review, appCache })
+  setupRoutes({ app, appCache, ...models })
   return app
 }
 

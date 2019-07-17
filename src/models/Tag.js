@@ -9,7 +9,7 @@ const fields = {
 }
 
 const schema = new mongoose.Schema(fields, {
-  collection: 'tag'
+  collection: 'tags'
 })
 
 const model = mongoose.model('Tag', schema)

@@ -5,16 +5,13 @@ const mongoose = require('mongoose')
 mongoose.Promise = global.Promise
 
 // Models
-const { Project, Link, Review } = require('./models')
+const models = require('./models')
 
 const createApp = require('./app')
 
 function connect(uri) {
   debug('Connecting', `${uri.slice(0, 12)}...`)
-  mongoose.connect(
-    uri,
-    { useMongoClient: true }
-  )
+  mongoose.connect(uri, { useMongoClient: true })
 }
 
 function main() {
@@ -26,10 +23,10 @@ function main() {
   try {
     connect(uri)
   } catch (e) {
-    throw new Error('Unable to connect to the DB', `${uri.slice(0, 12)}...`)
+    throw new Error(`Unable to connect to the DB ${uri.slice(0, 12)}`)
   }
   const port = process.env.PORT || 3030
-  const app = createApp({ Project, Link, Review })
+  const app = createApp(models)
   console.log('> API started, listening on port', port) // eslint-disable-line no-console
   app.listen(port)
 }

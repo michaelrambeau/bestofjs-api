@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const get = require('lodash.get')
+const { get } = require('lodash')
 // const getErrorMessage = require('../helpers/getErrorMessage')
 // const constants = require('./constants')
 

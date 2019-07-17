@@ -1,63 +1,61 @@
-const flow = require('lodash.flow')
 const prettyBytes = require('pretty-bytes')
 const debug = require('debug')('api')
 
 const { fetchIfNeeded } = require('../../helpers/next-update')
+const { createStarStorage } = require('./star-storage')
 
-const convertTag = tag => tag.code
-
-async function findProject({ Project, full_name }) {
+async function findProject({ Project, Snapshot, full_name }) {
   const query = { 'github.full_name': full_name }
-  const fields = [
-    'name',
-    'icon.url',
-    'github',
-    // 'tags',
-    'npm',
-    'trends',
-    'bundle',
-    'packageSize'
-  ]
-  const project = await Project.findOne(query, fields)
+  const project = await Project.findOne(query).populate('tags')
   if (!project) throw new Error(`Project not found '${full_name}'`)
+
+  const starCollection = Snapshot.collection
+  const storage = createStarStorage(starCollection)
+
+  const dailyTrends = await storage.getDailyTrends(project._id)
+  debug(
+    `${dailyTrends.length} daily trends found`,
+    dailyTrends.slice(dailyTrends.length - 7)
+  )
+  project.dailyTrends = dailyTrends
+
   return convertProject(project)
 }
 
-const addTags = input => output => {
-  const { tags } = input
-  return tags
-    ? Object.assign({}, output, { tags: tags.map(convertTag) })
-    : output
-}
-
-const addTrends = input => output => {
-  const { trends } = input
-  return trends
-    ? Object.assign({}, output, { 'daily-trends': trends.daily })
-    : output
-}
-
 function convertProject(project) {
-  const { github, npm, bundle, packageSize, name, icon } = project
-  const output = {
+  const description = project.getDescription()
+  const {
+    github,
+    npm,
+    bundle,
+    packageSize,
     name,
+    icon,
+    tags,
+    dailyTrends
+  } = project
+
+  const result = {
+    name,
+    description,
     github,
     npm,
     icon: icon ? icon.url : null,
     bundle,
-    packageSize
+    packageSize,
+    tags: tags.map(tag => tag.code),
+    dailyTrends
   }
-  const response = flow([addTags(project), addTrends(project)])(output)
-  return response
+  return result
 }
 
-const createService = ({ Project, cache, dailyUpdateUTCHour }) => {
+const createService = ({ Project, Snapshot, cache, dailyUpdateUTCHour }) => {
   class ProjectDetails {
     async find({ route /*, params */ }) {
       const { owner, repo } = route
       const full_name = `${owner}/${repo}`
       const { data, meta } = await fetchIfNeeded({
-        fetchFn: () => findProject({ full_name, Project }),
+        fetchFn: () => findProject({ full_name, Project, Snapshot }),
         key: full_name,
         cache,
         currentDate: new Date(),

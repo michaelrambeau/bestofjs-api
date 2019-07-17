@@ -1,20 +1,23 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
 const fields = {
-  stars: Number,
+  year: Number,
   project: {
     type: mongoose.Schema.ObjectId,
-    ref: 'Project'
+    ref: "Project"
   },
   createdAt: {
     type: Date
+  },
+  insertedAt: {
+    type: Date
   }
-}
+};
 
 const schema = new mongoose.Schema(fields, {
-  collection: 'snapshot'
-})
+  collection: "snapshots"
+});
 
-const model = mongoose.model('Snapshot', schema)
+const model = mongoose.model("Snapshot", schema);
 
-module.exports = model
+module.exports = model;

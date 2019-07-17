@@ -1,9 +1,10 @@
 {
+  "version": 1,
   "env": {
     "NODE_ENV": "production",
-    "DB_ENV": "production",
+    "DB_ENV": "v2",
     "DEBUG": "api",
-    "MONGO_URI_PRODUCTION": "@bestofjs_prod_mongo_uri"
+    "MONGO_URI_V2": "@bestofjs_v2_mongo_uri"
   },
-  "alias": "bestofjs-api-v1"
+  "alias": "bestofjs-api-v2"
 }

@@ -14,16 +14,16 @@ const makeHttpCaching = require('./http-caching')
 
 const dailyUpdateUTCHour = 21
 
-function setupRoutes({ app, appCache, Project, Link, Review }) {
+function setupRoutes({ app, appCache, ...models }) {
   const { version, name, description } = packageJson
   const lookupService = createLookupService({
     cache: appCache.projectIds,
-    Model: Project
+    Model: models.Project
   })
   const projectDetailsService = createProjectDetailsService({
-    Project,
     cache: appCache.projectDetails,
-    dailyUpdateUTCHour
+    dailyUpdateUTCHour,
+    ...models
   })
   const httpCaching = makeHttpCaching({ dailyUpdateUTCHour })
   const sendStatus = (req, res) =>
@@ -41,8 +41,11 @@ function setupRoutes({ app, appCache, Project, Link, Review }) {
     })
   }
 
-  const LinksService = createLinksService({ lookupService, Model: Link })
-  const ReviewsService = createReviewsService({ lookupService, Model: Review })
+  const LinksService = createLinksService({ lookupService, Model: models.Link })
+  const ReviewsService = createReviewsService({
+    lookupService,
+    Model: models.Review
+  })
 
   app.use(
     '/projects/:owner/:repo/user-content',
