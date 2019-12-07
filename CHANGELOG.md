@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 3.0 - December 2019
+
+- Add monthly trends data to project details API
+
 ## 1.1 - July 2018
 
 - Add `bundle` and `packageSize` data to project details

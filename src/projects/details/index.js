@@ -12,12 +12,11 @@ async function findProject({ Project, Snapshot, full_name }) {
   const starCollection = Snapshot.collection
   const storage = createStarStorage(starCollection)
 
-  const dailyTrends = await storage.getDailyTrends(project._id)
-  debug(
-    `${dailyTrends.length} daily trends found`,
-    dailyTrends.slice(dailyTrends.length - 7)
-  )
-  project.dailyTrends = dailyTrends
+  const { daily, monthly } = await storage.getTimeSeries(project._id)
+
+  debug(`${daily.length} daily trends found`, daily.slice(daily.length - 7))
+  debug('Montly trends', monthly)
+  project.timeSeries = { daily, monthly }
 
   return convertProject(project)
 }
@@ -32,7 +31,7 @@ function convertProject(project) {
     name,
     icon,
     tags,
-    dailyTrends
+    timeSeries
   } = project
 
   const result = {
@@ -44,7 +43,7 @@ function convertProject(project) {
     bundle,
     packageSize,
     tags: tags.map(tag => tag.code),
-    dailyTrends
+    timeSeries
   }
   return result
 }

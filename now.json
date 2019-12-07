@@ -6,5 +6,5 @@
     "DEBUG": "api",
     "MONGO_URI_V2": "@bestofjs_v2_mongo_uri"
   },
-  "alias": "bestofjs-api-v2"
+  "alias": "bestofjs-api-v3"
 }

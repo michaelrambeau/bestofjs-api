@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const emojiRegex = require('emoji-regex/es2015')
 
 const fields = {
   name: String,
@@ -92,18 +93,26 @@ schema.methods.toString = function() {
 
 // For some projects, don't use the GitHub description that is not really relevant
 schema.methods.getDescription = function() {
-  const { description: githubDescription } = this.github
+  const { description: gitHubDescription } = this.github
 
-  const overrideGithubDescription =
-    this.override_description || !githubDescription
-  return overrideGithubDescription ? this.description : githubDescription
+  return gitHubDescription && !this.override_description
+    ? cleanGitHubDescription(gitHubDescription)
+    : this.description
 }
 
-// schema.virtual('key').get(function () {
-//   return this.name.toLowerCase().replace(/[^a-z._\-0-9]+/g, '-')
-// })
+function cleanGitHubDescription(description) {
+  description = removeGitHubEmojis(description)
+  description = removeGenericEmojis(description)
+  return description
+}
 
-// schema.index({ 'github.full_name': 1, type: -1 }); // schema level
+function removeGitHubEmojis(input) {
+  return input.replace(/(:([a-z_\d]+):)/g, '').trim()
+}
+
+function removeGenericEmojis(input) {
+  return input.replace(emojiRegex(), '').trim()
+}
 
 const model = mongoose.model('Project', schema)
 module.exports = model

@@ -1,4 +1,4 @@
-const { flattenDeep, orderBy, takeRight } = require('lodash')
+const { groupBy, flattenDeep, orderBy, takeRight } = require('lodash')
 const mongoose = require('mongoose')
 const { DateTime } = require('luxon')
 const ObjectId = mongoose.Types.ObjectId
@@ -106,10 +106,15 @@ function createStarStorage(collection) {
       return trends
     },
 
-    async getDailyTrends(projectId) {
+    async getTimeSeries(projectId) {
+      const currentDate = normalizeDate(new Date())
       const snapshots = await getAllSnapshots(projectId)
-      const trends = computeDailyTrends(snapshots)
-      return trends
+      const daily = computeDailyTrends(snapshots)
+      const monthly = computeMonthlyTrends(snapshots, { currentDate })
+      return {
+        daily,
+        monthly
+      }
     }
   }
 }
@@ -171,9 +176,37 @@ function computeDailyTrends(snapshots, { count = 366 } = {}) {
   ).deltas
 }
 
+function computeMonthlyTrends(snapshots, { count = 12, currentDate } = {}) {
+  if (snapshots.length === 0) return []
+  const total = (count + 1) * 31
+  snapshots = takeRight(orderBy(snapshots, toDate, 'asc'), total)
+
+  const grouped = groupBy(snapshots, ({ year, month }) => `${year}/${month}`)
+
+  return Object.values(grouped)
+    .map(group => {
+      const firstSnapshot = group[0]
+      const lastSnapshot = group[group.length - 1]
+      const { year, month, stars, day } = firstSnapshot
+      return {
+        year,
+        month,
+        firstDay: day,
+        lastDay: lastSnapshot.day,
+        delta: lastSnapshot.stars - stars
+      }
+    })
+    .filter(({ firstDay }) => firstDay === 1)
+    .filter(
+      ({ year, month }) =>
+        !(month === currentDate.month && year === currentDate.year)
+    )
+}
+
 module.exports = {
   createStarStorage,
   normalizeDate,
   computeTrends,
-  computeDailyTrends
+  computeDailyTrends,
+  computeMonthlyTrends
 }
